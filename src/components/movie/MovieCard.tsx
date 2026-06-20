@@ -1,4 +1,5 @@
 import { ThemedText } from "@/components/themed-text";
+import { API } from "@/constants/api";
 import { Movie } from "@/types";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -9,7 +10,7 @@ interface MovieCardProps {
 
 export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
   const posterUrl = movie.poster_path
-    ? `${process.env.EXPO_PUBLIC_TMDB_IMAGE_URL}${movie.poster_path}`
+    ? `${API.imageUrl}${movie.poster_path}`
     : null;
 
   return (
