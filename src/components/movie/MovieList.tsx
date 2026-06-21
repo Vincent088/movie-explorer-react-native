@@ -8,7 +8,7 @@ import { strings } from "@/constants";
 import { Movie } from "@/types";
 import { MovieCard } from "./MovieCard";
 
-const getNumColumns = (width: number) => {
+export const getNumColumns = (width: number) => {
   if (width >= 1200) return 6;
   if (width >= 900) return 5;
   if (width >= 600) return 4;
