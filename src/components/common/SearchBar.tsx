@@ -14,7 +14,7 @@ export const SearchBar = ({ value, onChangeText }: SearchBarProps) => {
         value={value}
         onChangeText={onChangeText}
         placeholder={strings.home.searchPlaceholder}
-        placeholderTextColor="#999"
+        placeholderTextColor="#555"
         returnKeyType="search"
         clearButtonMode="while-editing"
       />
@@ -28,11 +28,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   input: {
-    backgroundColor: "#F0F0F0",
-    borderRadius: 10,
+    backgroundColor: "#222",
+    borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#fff",
   },
 });

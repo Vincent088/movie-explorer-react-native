@@ -1,11 +1,17 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
-import { useColorScheme } from "react-native";
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
+import { useEffect } from "react";
+import { useFavoritesStore } from "@/store/favorites";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
+
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
+    <ThemeProvider value={DarkTheme}>
+      <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right', gestureEnabled: true }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="movie/[id]" />
       </Stack>

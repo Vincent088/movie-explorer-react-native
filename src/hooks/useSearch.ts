@@ -11,6 +11,7 @@ interface UseSearchResult {
   setQuery: (query: string) => void;
   hasMore: boolean;
   loadMore: () => void;
+  retry: () => void;
 }
 
 export const useSearch = (): UseSearchResult => {
@@ -44,8 +45,11 @@ export const useSearch = (): UseSearchResult => {
       setResults([]);
       setPage(1);
       setHasMore(false);
+      setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     const debounce = setTimeout(() => {
       setPage(1);
@@ -63,5 +67,9 @@ export const useSearch = (): UseSearchResult => {
     }
   };
 
-  return { results, loading, error, query, setQuery, hasMore, loadMore };
+  const retry = () => {
+    if (query.trim() !== "") fetchSearch(query, 1, true);
+  };
+
+  return { results, loading, error, query, setQuery, hasMore, loadMore, retry };
 };
