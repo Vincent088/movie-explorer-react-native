@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -31,25 +32,32 @@ export default function HomeScreen() {
     setQuery,
     hasMore: searchHasMore,
     loadMore: searchLoadMore,
+    retry: searchRetry,
   } = useSearch();
 
   const isSearching = query.trim().length > 0;
-  const displayMovies = isSearching ? results : movies;
+
+  const displayMovies = useMemo(
+    () => (isSearching ? results : movies),
+    [isSearching, results, movies],
+  );
   const displayLoading = isSearching ? searchLoading : moviesLoading;
-  const displayError = isSearching ? searchError : moviesError;
   const displayHasMore = isSearching ? searchHasMore : hasMore;
   const displayLoadMore = isSearching ? searchLoadMore : loadMore;
 
-  const handleMoviePress = (movie: Movie) => {
-    router.push({ pathname: "/movie/[id]", params: { id: movie.id } });
-  };
+  const handleMoviePress = useCallback(
+    (movie: Movie) => {
+      router.push({ pathname: "/movie/[id]", params: { id: movie.id } });
+    },
+    [router],
+  );
 
-  if (displayLoading && displayMovies.length === 0) {
+  if (displayLoading && displayMovies.length === 0 && !isSearching) {
     return <LoadingIndicator />;
   }
 
-  if (displayError && displayMovies.length === 0) {
-    return <ErrorMessage message={displayError} onRetry={refresh} />;
+  if (moviesError && movies.length === 0 && !isSearching) {
+    return <ErrorMessage message={moviesError} onRetry={refresh} />;
   }
 
   return (
@@ -65,6 +73,8 @@ export default function HomeScreen() {
           hasMore={displayHasMore}
           onLoadMore={displayLoadMore}
           onMoviePress={handleMoviePress}
+          error={isSearching ? searchError : null}
+          onRetry={isSearching ? searchRetry : undefined}
         />
       </SafeAreaView>
     </ThemedView>

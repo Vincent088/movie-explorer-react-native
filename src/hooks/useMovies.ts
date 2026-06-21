@@ -1,7 +1,8 @@
+import { useCallback, useEffect, useState } from "react";
+
 import { strings } from "@/constants";
 import { getPopularMovies } from "@/services";
 import { Movie } from "@/types";
-import { useEffect, useState } from "react";
 
 interface UseMoviesResult {
   movies: Movie[];
@@ -20,7 +21,7 @@ export const useMovies = (): UseMoviesResult => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchMovies = async (pageNumber: number, reset: boolean = false) => {
+  const fetchMovies = useCallback(async (pageNumber: number, reset: boolean = false) => {
     try {
       setLoading(true);
       setError(null);
@@ -32,24 +33,24 @@ export const useMovies = (): UseMoviesResult => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchMovies(1, true);
-  }, []);
+  }, [fetchMovies]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!loading && hasMore) {
       const nextPage = page + 1;
       setPage(nextPage);
       fetchMovies(nextPage);
     }
-  };
+  }, [loading, hasMore, page, fetchMovies]);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setPage(1);
     fetchMovies(1, true);
-  };
+  }, [fetchMovies]);
 
   return { movies, loading, error, page, hasMore, loadMore, refresh };
 };
