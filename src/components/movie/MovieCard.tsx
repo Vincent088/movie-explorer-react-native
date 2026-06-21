@@ -10,7 +10,7 @@ interface MovieCardProps {
   onPress: (movie: Movie) => void;
 }
 
-const getRatingColor = (rating: number) => {
+export const getRatingColor = (rating: number) => {
   if (rating >= 7) return "#27AE60";
   if (rating >= 5) return "#F39C12";
   return "#E50914";
