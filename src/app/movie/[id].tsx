@@ -48,11 +48,13 @@ export default function MovieDetailScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-        {backdropUrl ? (
-          <Image source={{ uri: backdropUrl }} style={styles.backdrop} />
-        ) : (
-          <View style={styles.backdropPlaceholder} />
-        )}
+        <View style={styles.backdropWrapper}>
+          {backdropUrl ? (
+            <Image source={{ uri: backdropUrl }} style={styles.backdrop} />
+          ) : (
+            <View style={styles.backdropPlaceholder} />
+          )}
+        </View>
 
         <SafeAreaView edges={["bottom"]} style={styles.content}>
           <View style={styles.header}>
@@ -117,6 +119,9 @@ export default function MovieDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backdropWrapper: {
+    width: "100%",
   },
   backdrop: {
     width: "100%",
@@ -200,7 +205,6 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     backgroundColor: "rgba(0,0,0,0.45)",
     borderRadius: 20,
-    gap: 0,
   },
   backText: {
     color: "#fff",
