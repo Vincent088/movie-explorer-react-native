@@ -1,56 +1,72 @@
-# Welcome to your Expo app 👋
+# Movie Explorer
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native app for browsing popular movies, searching titles, and saving favorites — powered by the TMDB API.
 
-## Get started
+---
+
+## Running the app
+
+### Prerequisites
+
+- Node.js 18+
+- Expo Go installed on your phone, or an Android/iOS emulator set up
+
+### Setup
 
 1. Install dependencies
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Start the dev server
 
-### Other setup steps
+```bash
+npm start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+After the dev server starts, press:
 
-## Learn more
+- `a` — run on Android (emulator or connected device)
+- `i` — run on iOS (simulator or connected device, macOS only)
 
-To learn more about developing your project with Expo, look at the following resources:
+### Running tests
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm test
+```
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## Third-party libraries
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Library                                       | Why                                                                                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **expo-router**                               | File-based navigation — pages map directly to files, same mental model as Next.js. Less boilerplate than React Navigation setup. |
+| **axios**                                     | Cleaner API client than fetch — interceptors for global error handling and auth params, better default timeout behavior.         |
+| **zustand**                                   | Minimal state management for the favorites store. Much less ceremony than Redux, and works well with React's hook model.         |
+| **expo-image**                                | Drop-in replacement for React Native's Image with built-in disk/memory caching and smooth transitions.                           |
+| **@react-native-async-storage/async-storage** | Persisting favorites to local storage between app sessions.                                                                      |
+| **@testing-library/react-native**             | Component testing that focuses on what the user sees, not implementation details.                                                |
+
+---
+
+## Architecture
+
+The app follows a **feature-based layered architecture**:
+
+```
+src/
+├── app/          # Screens (Expo Router file-based routes)
+├── screens/      # Screen-level components with layout logic
+├── components/   # Reusable UI components (MovieCard, SearchBar, etc.)
+├── hooks/        # Data-fetching hooks (useMovies, useSearch)
+├── services/     # API layer — all TMDB calls live here
+├── store/        # Zustand global state (favorites)
+├── types/        # Shared TypeScript interfaces
+└── constants/    # API config, strings, theme
+```
+
+**Data flow**: screens call hooks → hooks call services → services call the API. The store sits outside this flow and is accessed directly by any component that needs it.
+
+This keeps each layer responsible for one thing — the API service doesn't know about UI state, and components don't know about HTTP calls.
